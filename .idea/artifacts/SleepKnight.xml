@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="SleepKnight">
+    <output-path>$PROJECT_DIR$/out/artifacts/SleepKnight</output-path>
+    <root id="archive" name="SleepKnight.jar">
+      <element id="module-output" name="SleepKnight" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/sqlite-jdbc-3.49.1.0.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
