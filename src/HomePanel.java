@@ -5,19 +5,62 @@ public class HomePanel extends JPanel {
     private CardLayout cardLayout;
     private JPanel screen;
     private Image backgroundImage;
+    private Image graphImage;
+    private Image sleepKnightLogo;
 
     public HomePanel(CardLayout cardLayout, JPanel screen) {
         this.cardLayout = cardLayout;
         this.screen = screen;
 
-        ImageIcon bgIcon = new ImageIcon("images/Blue.jpg");
+        ImageIcon bgIcon = new ImageIcon("images/Starrynight2.png");
         backgroundImage = bgIcon.getImage();
         setLayout(new BorderLayout());
         setOpaque(false);
 
+        //Adding empty padding to make the form center
+        JPanel topPadding = new JPanel();
+        topPadding.setOpaque(false);
+        topPadding.setPreferredSize(new Dimension(0, 50)); // 100px padding
+        add(topPadding, BorderLayout.NORTH);
+
+        //Loading graph image
+        ImageIcon gIcon = new ImageIcon("images/sleepCycle.jpg");
+        graphImage = gIcon.getImage();
+
+        //Loading Sleep Knight Logo
+        ImageIcon skIcon = new ImageIcon("images/sleepKnightTitle.png");
+        sleepKnightLogo = skIcon.getImage();
+
         //Main content panel for screen adjustment
-        JPanel contentPanel = new JPanel(new GridBagLayout());
+        JPanel contentPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g.create();
+                g2d.setColor(new Color(0, 0, 0, 100)); // semi-transparent black
+                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 30, 30);
+                g2d.dispose();
+                int currentY = 20;
+                int graphSpacing = 50;
+
+                // Draw sleepKnightLogo first
+                if (sleepKnightLogo != null) {
+                    int logoX = (getWidth() - sleepKnightLogo.getWidth(this)) / 2;
+                    g.drawImage(sleepKnightLogo, logoX, currentY, this);
+                    currentY += sleepKnightLogo.getHeight(this) + 10; // add spacing below logo
+                }
+
+                currentY += graphSpacing;
+                // Then draw graphImage below the logo
+                if (graphImage != null) {
+                    int graphX = (getWidth() - graphImage.getWidth(this)) / 2;
+                    g.drawImage(graphImage, graphX, currentY, this);
+                }
+            }
+        };
         contentPanel.setOpaque(false);
+
+        add(contentPanel, BorderLayout.CENTER);
 
         //Constraints for GridBagLayout
         GridBagConstraints gbc = new GridBagConstraints();
@@ -40,7 +83,11 @@ public class HomePanel extends JPanel {
         homeBtn.addActionListener((e) -> cardLayout.show(screen, "HOME"));
         sleepBtn.addActionListener((e) -> cardLayout.show(screen, "SLEEP"));
         tipsBtn.addActionListener((e) -> cardLayout.show(screen, "TIPS"));
-        profileBtn.addActionListener((e) -> cardLayout.show(screen, "PROFILE"));
+        profileBtn.addActionListener((e) ->{
+            cardLayout.show(screen, "PROFILE");
+            String currentUsername = CurrentUser.getCurrentUserName();
+            ProfilePanel.loadUserProfile(currentUsername);
+        });
 
         //Adding buttons to button panel
         buttonPanel.add(homeBtn);
@@ -77,15 +124,3 @@ public class HomePanel extends JPanel {
         return button;
     }
 }
-/*
-private static JPanel homePanel() {
-        JPanel panel = createBackgroundPanel();
-        panel.setLayout(new BorderLayout());
-        JButton sleepBtn = createCloudButton("Sleep");
-        JButton profileBtn = createCloudButton("Profile");
-        JButton tipsBtn = createCloudButton("Tips");
-        sleepBtn.addActionListener((e) -> cardLayout.show(screen, "SLEEP"));
-        profileBtn.addActionListener((e) -> cardLayout.show(screen, "PROFILE"));
-        tipsBtn.addActionListener((e) -> cardLayout.show(screen, "TIPS"));
-        return panel;
-        }*/

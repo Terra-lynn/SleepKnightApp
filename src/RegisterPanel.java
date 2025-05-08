@@ -48,7 +48,32 @@ public class RegisterPanel extends JPanel {
         JButton backBtn = createCloudButton("Back");
 
         //Action Listeners
-        registerBtn.addActionListener((e) -> cardLayout.show(screen, "LOGIN"));
+        registerBtn.addActionListener((e) -> {
+            String enteredUsername = username.getText();
+            String enteredPassword = new String(password.getPassword());
+            String enteredConfirmedPassword = new String(confirmPassword.getPassword());
+            String enteredEmail = email.getText();
+
+            if (enteredUsername.isEmpty() || enteredPassword.isEmpty() || enteredConfirmedPassword.isEmpty() || enteredEmail.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "All fields must be filled out.",
+                        "Please fill in missing information.", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (!enteredPassword.equals(enteredConfirmedPassword)) {
+                JOptionPane.showMessageDialog(this, "Passwords do not match.",
+                        "Please try again.", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (Database.insertUser(enteredUsername, enteredPassword, enteredEmail)) {
+                JOptionPane.showMessageDialog(this, "Registration successful!");
+                cardLayout.show(screen, "LOGIN");
+            } else {
+                JOptionPane.showMessageDialog(this, "Registration failed. Username may already exist.",
+                        "Registration Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
         backBtn.addActionListener((e) -> cardLayout.show(screen, "LOGIN"));
 
         //Setting up constraints for form panel

@@ -1,21 +1,18 @@
 import java.awt.*;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 public class Main {
     private static JPanel screen;
     private static CardLayout cardLayout;
+    private static HomePanel homePanel;
 
     public Main() {
     }
 
     public static void main(String[] args) {
+        Database.initializingDatabase();
         SwingUtilities.invokeLater(Main::displayGUI);
     }
 
@@ -26,6 +23,7 @@ public class Main {
         frame.setDefaultCloseOperation(3);
         frame.setSize(600, 800);
         cardLayout = new CardLayout();
+        homePanel = new HomePanel(cardLayout, screen);
         screen = new JPanel(cardLayout);
         screen.add(new LoginPanel(cardLayout, screen), "LOGIN");
         screen.add(new RegisterPanel(cardLayout, screen), "REGISTER");
@@ -38,4 +36,6 @@ public class Main {
         frame.setVisible(true);
         cardLayout.show(screen, "LOGIN");
     }
+
+    public static HomePanel getHomePanel() {return homePanel;}
 }

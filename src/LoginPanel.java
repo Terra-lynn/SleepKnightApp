@@ -2,12 +2,12 @@ import javax.swing.*;
 import java.awt.*;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionEvent;
+import java.util.HashMap;
 
 public class LoginPanel extends JPanel {
     private CardLayout cardLayout;
     private JPanel screen;
     private Image backgroundImage;
-
 
     public LoginPanel(CardLayout cardLayout, JPanel screen) {
         this.cardLayout = cardLayout;
@@ -45,7 +45,19 @@ public class LoginPanel extends JPanel {
         JButton registerBtn = createCloudButton("Register");
 
         //Action listeners
-        loginBtn.addActionListener((e) -> cardLayout.show(screen, "HOME")); //CHANGE BACK TO HOME PAGE AFTER DEMO
+        loginBtn.addActionListener((e) -> {
+            String enteredUsername = username.getText();
+            String enteredPassword = new String(password.getPassword());
+
+            if(Database.validateUser(enteredUsername, enteredPassword)) {
+                //Storing logged in user
+                CurrentUser.setCurrentUserName(enteredUsername);
+                cardLayout.show(screen, "HOME");
+            } else {
+                JOptionPane.showMessageDialog(screen, "Invalid Username or Password",
+                        "Please try again", JOptionPane.ERROR_MESSAGE);
+            }
+        });
         registerBtn.addActionListener((e) -> cardLayout.show(screen, "REGISTER"));
 
         //Set up constraints for form panel
